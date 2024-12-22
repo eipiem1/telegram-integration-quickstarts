@@ -24,20 +24,26 @@ Flow is a layer-1 blockchain with two environments: Flow EVM and Flow Cadence. T
 
 ### 1. Run the command in your terminal
 
-`bash npx create-next-app@latest my-app --typescript`
-​
+```bash 
+npx create-next-app@latest my-app --typescript
+```
 
 ### 2. Navigate to Your Project Directory
 
-`bash cd my-app`
-​
+```bash 
+cd my-app
+```
 
 ### 3. Install @onflow/fcl and @onflow/types
 
-`bash npm install --save @onflow/fcl @onflow/types`
+```bash 
+npm install --save @onflow/fcl @onflow/types
+```
 ​
 **\*Note:** Some setups may require pino-pretty. If you encounter any errors, run:
-`bash npm install pino-pretty --save-dev`
+```bash 
+npm install pino-pretty --save-dev
+```
 
 ## Step 2: Configure Flow (`flow-config.ts`)
 
