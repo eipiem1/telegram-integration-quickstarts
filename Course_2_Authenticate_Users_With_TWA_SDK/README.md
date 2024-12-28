@@ -46,7 +46,7 @@ npm install @twa-dev/sdk @telegram-apps/init-data-node --legacy-peer-deps
 /newbot
 ```
 
-### 2. Save your bot id which is the numbers before the colon `:`
+### 2. Save your bot id which is the numbers before the colon `:` in your bot api token
 
 <img src="../assets/images/image28.png" alt="Bot ID" width="500" />
 
@@ -238,6 +238,10 @@ export default function Home() {
 This will create a deep link (e.g. https://t.me/WebAppToTwaBot/webapp) that you can access to check if your telegram web app display’s the user’s id and username
 
 <img src="../assets/images/image9.webp" alt="Final Result" width="300" />
+
+If you have followed the steps correctly you should see something similar as the above through your telegram app (on mobile). 
+
+As the initData is being validated that it's signed by Telegram, the TWA will only display user's id and username when it's being viewed from the Telegram mobile app
 
 ## Conclusion
 
