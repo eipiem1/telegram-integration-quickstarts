@@ -56,6 +56,14 @@ This quickstart guide walks you through turning any web app into a TWA using [Bo
 
 <img src="../assets/images/image6.webp" alt="Deeplink Telegram Web App" width="500" />
 
+## **Step 5:** Configure menu button
+
+### 1. Use the command `/mybots` and choose your Telegram bot to access bot settings
+
+### 2. Select `Bot Settings` -> `Menu Button` -> `Configure menu button`
+
+### 3. Enter the Web App URL and the title to be displayed on the button
+
 ## Conclusion
 
 And that’s it! With just a few steps, your web app is now accessible as a Telegram Web App, opening up new ways for users to engage with your app directly within Telegram. Happy building!
