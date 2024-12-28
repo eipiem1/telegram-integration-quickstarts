@@ -32,7 +32,7 @@ npx create-next-app@latest my-telegram-app --typescript --use-npm
 ```bash 
 cd my-telegram-app
 ```
-### 3. Install the @twa-dev/sdk with the —legacy-peer-deps flag
+### 3. Install the @twa-dev/sdk and @telegram-apps/init-data-node with the —legacy-peer-deps flag
 
 ```bash 
 npm install @twa-dev/sdk @telegram-apps/init-data-node --legacy-peer-deps
