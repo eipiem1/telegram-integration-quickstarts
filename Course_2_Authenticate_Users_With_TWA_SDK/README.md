@@ -48,7 +48,7 @@ npm install @twa-dev/sdk @telegram-apps/init-data-node --legacy-peer-deps
 
 ### 2. Save your bot id which is the numbers before the colon `:`
 
-
+<img src="../assets/images/image28.png" alt="Bot ID" width="500" />
 
 ## Step 3: Set Up the Authentication Context
 
