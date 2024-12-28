@@ -27,24 +27,36 @@ With this setup, you can fetch user data directly, allowing you to personalize c
 ```bash 
 npx create-next-app@latest my-telegram-app --typescript --use-npm
 ```
-​
 ### 2. Navigate to Your Project Directory
 
 ```bash 
 cd my-telegram-app
 ```
-​
 ### 3. Install the @twa-dev/sdk with the —legacy-peer-deps flag
 
 ```bash 
-npm install @twa-dev/sdk --legacy-peer-deps
+npm install @twa-dev/sdk @telegram-apps/init-data-node --legacy-peer-deps
 ```
 
-## Step 2: Set Up the Authentication Context with @twa-dev/sdk
+## Step 2: Create a Telegram Bot and get your Bot ID
+
+### 1. Go to [BotFather](https://t.me/BotFather) on Telegram and create a new bot
+
+```bash
+/newbot
+```
+
+### 2. Save your bot id which is the numbers before the colon `:`
+
+
+
+## Step 3: Set Up the Authentication Context
 
 We’ll use React’s Context API to manage authentication and Telegram Web App data, making it available across our app.
 
-### 1. Create an `AuthContext.tsx` in a new `context` folder under `app`
+### 1. Create an `AuthContext.tsx` in a new `context` folder under `app` and add your bot id
+
+### Note: Make sure to replace the `botId` with your actual bot id
 
 ```typescript
 // app/context/AuthContext.tsx
@@ -52,11 +64,13 @@ We’ll use React’s Context API to manage authentication and Telegram Web App 
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import WebApp from '@twa-dev/sdk';
+import { validate3rd } from '@telegram-apps/init-data-node/web';
 
 type AuthContextType = {
 	userID: number | null;
 	username: string | null;
 	windowHeight: number;
+	isDataValid: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -69,6 +83,7 @@ export const AuthContextProvider = ({
 	const [windowHeight, setWindowHeight] = useState<number>(0);
 	const [userID, setUserID] = useState<number | null>(null);
 	const [username, setUsername] = useState<string | null>(null);
+	const [isDataValid, setIsDataValid] = useState<boolean>(false);
 
 	useEffect(() => {
 		// Ensure this code only runs on the client side
@@ -77,10 +92,24 @@ export const AuthContextProvider = ({
 			setWindowHeight(WebApp.viewportStableHeight || window.innerHeight);
 			WebApp.ready();
 
-			// Set Telegram user data
-			const user = WebApp.initDataUnsafe.user;
-			setUserID(user?.id || null);
-			setUsername(user?.username || null);
+			// Validate Telegram data
+			(async () => {
+				try {
+					const botId = 7210667871; // Replace with your actual bot ID
+					await validate3rd(WebApp.initData, botId); // Validate initData
+					setIsDataValid(true);
+					const user = WebApp.initDataUnsafe.user; // Extract user data if valid
+					setUserID(user?.id || null);
+					setUsername(user?.username || null);
+				} catch (error) {
+					if (error instanceof Error) {
+						console.error('Validation failed:', error.message);
+					} else {
+						console.error('Validation failed:', error);
+					}
+					setIsDataValid(false);
+				}
+			})();
 		}
 	}, []);
 
@@ -88,6 +117,7 @@ export const AuthContextProvider = ({
 		userID,
 		username,
 		windowHeight,
+		isDataValid,
 	};
 
 	return (
@@ -106,7 +136,7 @@ export const useAuth = () => {
 };
 ```
 
-## Step 3: Wrap your App with `AuthContextProvider`
+## Step 4: Wrap your App with `AuthContextProvider`
 
 1. Update `layout.tsx` to wrap the entire app
 
@@ -130,7 +160,7 @@ export default function RootLayout({
 }
 ```
 
-## Step 4: Create DisplayUser.tsx and use it on Home Page
+## Step 5: Create DisplayUser.tsx and use it on Home Page
 
 To test if it works, we’ll use the `useAuth` hook from `AuthContext` to access and display the Telegram-authenticated user’s ID, username, and viewport height.
 
@@ -143,8 +173,24 @@ To test if it works, we’ll use the `useAuth` hook from `AuthContext` to access
 import { useAuth } from '@/context/AuthContext';
 
 export default function DisplayUser() {
-	const { userID, username, windowHeight } = useAuth();
+	const { userID, username, windowHeight, isDataValid } = useAuth();
 
+	if (!isDataValid) {
+		// Display a message if validation failed
+		return (
+			<div className="flex flex-col items-center justify-center min-h-screen text-center space-y-4">
+				<h1 className="text-4xl font-bold text-red-600">
+					Validation Failed
+				</h1>
+				<p className="text-lg">
+					The data could not be validated. Please try reloading the
+					app.
+				</p>
+			</div>
+		);
+	}
+
+	// Display user data if validation succeeded
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen text-center space-y-4">
 			<h1 className="text-4xl font-bold">
@@ -158,7 +204,7 @@ export default function DisplayUser() {
 }
 ```
 
-### 2. Create `app/page.tsx`
+### 2. Update `app/page.tsx`
 
 ```typescript
 // app/page.tsx
@@ -173,27 +219,21 @@ export default function Home() {
 }
 ```
 
-## Step 5: Deploy your frontend to Vercel
+## Step 6: Deploy your frontend to Vercel
 
 ### 1. Deploy your Next.js app to [Vercel](https://vercel.com/) (or your preferred hosting platform)
 
 <img src="../assets/images/image8.webp" alt="Website Deployment" width="500" />
 
-## Step 6: Create a Telegram Bot and Turn your Web App into a TWA
+## Step 7: Create a Telegram Bot and Turn your Web App into a TWA
 
-### 1. Go to [BotFather](https://t.me/BotFather) on Telegram and create a new bot
-
-```bash
-/newbot
-```
-
-### 2. Use `/newapp` command in BotFather to turn your web app into a TWA
+### 1. Go to [BotFather](https://t.me/BotFather) on Telegram and use `/newapp` command in BotFather to turn your web app into a TWA
 
 ```bash
 /newapp
 ```
 
-### 3. Set your bot’s domain to your deployment URL (e.g. https://web-app-to-twa.vercel.app/)
+### 2. Set your bot’s domain to your deployment URL (e.g. https://web-app-to-twa.vercel.app/)
 
 This will create a deep link (e.g. https://t.me/WebAppToTwaBot/webapp) that you can access to check if your telegram web app display’s the user’s id and username
 
