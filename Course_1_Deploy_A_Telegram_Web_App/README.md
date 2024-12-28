@@ -58,11 +58,23 @@ This quickstart guide walks you through turning any web app into a TWA using [Bo
 
 ## **Step 5:** Configure menu button
 
+<img src="../assets/images/image22.png" alt="Custom menu button" width="500" />
+
 ### 1. Use the command `/mybots` and choose your Telegram bot to access bot settings
+
+<img src="../assets/images/image23.png" alt="Custom menu button" width="500" />
 
 ### 2. Select `Bot Settings` -> `Menu Button` -> `Configure menu button`
 
+<img src="../assets/images/image24.png" alt="Bot Settings" width="500" />
+
+<img src="../assets/images/image25.png" alt="Menu Button" width="500" />
+
 ### 3. Enter the Web App URL and the title to be displayed on the button
+
+<img src="../assets/images/image26.png" alt="Configurations for new custom Menu Button" width="500" />
+
+<img src="../assets/images/image27.png" alt="Custom menu button" width="500" />
 
 ## Conclusion
 
